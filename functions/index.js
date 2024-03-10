@@ -1,4 +1,5 @@
 import { onRequest } from "firebase-functions/v2/https";
+import { setGlobalOptions } from "firebase-functions/v2";
 import { initializeApp } from "firebase/app";
 import express from "express";
 import routes from "./routes/index.js";
@@ -18,5 +19,7 @@ const firebaseConfig = {
 
 // Initialize Firebase
 initializeApp(firebaseConfig);
+
+setGlobalOptions({ region: "us-east4" });
 
 export const app = onRequest(server);

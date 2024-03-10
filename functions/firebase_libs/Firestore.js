@@ -16,6 +16,7 @@ export async function addNewDoc(collec, data) {
 
 export async function getList(collec) {
   const db = getFirestore();
-  const data = await getDocs(collection(db, collec));
-  return data.docs;
+  const res = await getDocs(collection(db, collec));
+  const data = res.docs.map((doc) => doc.data());
+  return data;
 }
