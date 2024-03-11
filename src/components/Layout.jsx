@@ -1,6 +1,5 @@
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { BarChart3, Home } from "lucide-react";
-
 import { cn } from "@/lib/utils";
 
 export default function Root() {

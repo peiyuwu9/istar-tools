@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  background-color: rgb(240, 240, 240);
+  background-color: rgb(241, 245, 249, 0.5);
 }
 
 @layer components {
@@ -39,7 +39,7 @@ body {
   }
 
   .active {
-    border-left: 5px solid #ffe54c;
+    border-left: 4px solid #ffe54c;
     padding-left: 10px;
   }
 }

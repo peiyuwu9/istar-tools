@@ -6,7 +6,8 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,8 +19,27 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export function DataTable({ columns, data, searchKey }) {
+  const [limit, setLimit] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(1);
   const [columnFilters, setColumnFilters] = useState([]);
 
   const table = useReactTable({
@@ -36,7 +56,7 @@ export function DataTable({ columns, data, searchKey }) {
 
   return (
     <>
-      <div className="flex justify-between items-center pb-4">
+      <div className="flex justify-between items-center mb-4">
         <Input
           placeholder="Search"
           value={table.getColumn(searchKey)?.getFilterValue() ?? ""}
@@ -47,13 +67,13 @@ export function DataTable({ columns, data, searchKey }) {
         />
         <Button
           size="default"
-          className="text-lg hover:bg-brand hover:text-black"
+          className="text-lg hover:bg-brand hover:text-slate-900"
         >
           <Plus className="h-5 w-5 mr-2" />
           New
         </Button>
       </div>
-      <div className="rounded-md border">
+      <div className="rounded-md border mb-4">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -103,23 +123,58 @@ export function DataTable({ columns, data, searchKey }) {
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          <ChevronLeft />
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          <ChevronRight />
-        </Button>
+      <div className="flex justify-between">
+        <div className="flex items-center gap-2">
+          <Select>
+            <SelectTrigger className="w-20">
+              <SelectValue placeholder={limit} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="10">10</SelectItem>
+              <SelectItem value="25">25</SelectItem>
+              <SelectItem value="50">50</SelectItem>
+            </SelectContent>
+          </Select>
+          <p className="text-sm">per Page</p>
+        </div>
+
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem
+              className={cn(
+                !table.getCanPreviousPage()
+                  ? "text-slate-900/30 pointer-events-none"
+                  : "cursor-pointer"
+              )}
+              onClick={() => table.getCanPreviousPage() && table.previousPage()}
+            >
+              <PaginationPrevious />
+            </PaginationItem>
+            {totalPage > 2 && currentPage > 2 && (
+              <PaginationItem>
+                <PaginationEllipsis />
+              </PaginationItem>
+            )}
+            <PaginationItem className="cursor-pointer">
+              <PaginationLink isActive>1</PaginationLink>
+            </PaginationItem>
+            {totalPage > 2 && currentPage < totalPage - 1 && (
+              <PaginationItem>
+                <PaginationEllipsis />
+              </PaginationItem>
+            )}
+            <PaginationItem
+              className={cn(
+                !table.getCanNextPage()
+                  ? "text-slate-900/30 pointer-events-none"
+                  : "cursor-pointer"
+              )}
+              onClick={() => table.getCanNextPage() && table.nextPage()}
+            >
+              <PaginationNext />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
       </div>
     </>
   );

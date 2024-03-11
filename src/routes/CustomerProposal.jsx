@@ -1,12 +1,16 @@
-import { Download } from "lucide-react";
+import { useState } from "react";
 import { useLoaderData } from "react-router";
-
-import { DataTable } from "@/components/ui/data-table";
+import { Download } from "lucide-react";
 import { formatDate } from "@/lib/utils";
+
 import { Badge } from "@/components/ui/badge";
+import { DataTable } from "@/components/ui/data-table";
 
 export default function CustomerProposal() {
   const { data } = useLoaderData();
+  const [limit, setLimit] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(1);
 
   const columns = [
     {
@@ -18,7 +22,7 @@ export default function CustomerProposal() {
       header: () => <div className="text-center">Customer</div>,
       cell: ({ row }) => (
         <div className="text-center">
-          <Badge>{row.original.customer}</Badge>{" "}
+          <Badge>{row.original.customer}</Badge>
         </div>
       ),
     },
@@ -35,8 +39,17 @@ export default function CustomerProposal() {
       },
     },
     {
-      id: "download",
-      cell: <Download />,
+      id: "actions",
+      cell: ({ row }) => {
+        const url = row.original.url;
+        return (
+          <div className="flex justify-evenly">
+            <a href={url} download>
+              <Download className="hover:text-green-500"/>
+            </a>
+          </div>
+        );
+      },
     },
   ];
 
