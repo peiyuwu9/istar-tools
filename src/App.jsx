@@ -1,9 +1,10 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
-import Home from "./routes/Home.jsx";
-import CustomerProposal from "./routes/CustomerProposal.jsx";
+import Home from "@/routes/Home.jsx";
+import CustomerProposal from "@/routes/CustomerProposal.jsx";
 
-import Layout from "./components/Layout.jsx";
+import Layout from "@/components/Layout.jsx";
+import { getCPList } from "@/lib/actions.js";
 
 const router = createBrowserRouter([
   {
@@ -17,6 +18,7 @@ const router = createBrowserRouter([
       {
         path: "customer-proposal",
         element: <CustomerProposal />,
+        loader: async () => getCPList("name", 1, 10),
       },
     ],
   },
