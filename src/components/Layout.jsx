@@ -21,7 +21,7 @@ export default function Root() {
   };
 
   return (
-    <div className="flex">
+    <div className="flex text-xl">
       <div
         id="sidebar"
         className="flex-none h-screen w-[300px] p-10 bg-white shadow-lg"
@@ -29,7 +29,7 @@ export default function Root() {
         <h2 className="text-5xl my-2 italic font-serif tracking-widest">
           iStar
         </h2>
-        <nav className="flex flex-col gap-7 my-24 text-xl">
+        <nav className="flex flex-col gap-7 my-20">
           {Object.values(navLinks).map(({ name, to, icon }) => (
             <NavLink
               to={to}
@@ -45,12 +45,12 @@ export default function Root() {
         </nav>
       </div>
       <div id="content" className="flex-1 min-w-[850px] p-5">
-        <h1 className="text-6xl p-5 tracking-wider">
+        <h1 className="text-6xl px-10 py-5 tracking-wider">
           {navLinks[location.pathname].title}
         </h1>
         <div
           id="container"
-          className="h-[calc(100vh-160px)] bg-white rounded-lg shadow"
+          className="h-[calc(100vh-160px)] p-10 bg-white rounded-lg shadow"
         >
           <Outlet />
         </div>

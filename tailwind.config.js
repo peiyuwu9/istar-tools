@@ -12,6 +12,9 @@ export default {
       },
     },
     extend: {
+      colors: {
+        brand: "#ffe54c",
+      },
       keyframes: {
         "accordion-down": {
           from: { height: "0" },

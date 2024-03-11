@@ -44,6 +44,6 @@ export async function getList(collec, orderByCol, pageNum, limitNum) {
 export async function addNewDoc(collec, data) {
   const db = getFirestore();
   const ref = doc(collection(db, collec));
-  data = { ...data, timestamp: serverTimestamp() };
+  data = { ...data, createdAt: serverTimestamp() };
   return await setDoc(ref, data);
 }

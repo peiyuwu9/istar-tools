@@ -8,7 +8,6 @@ body {
 
 @layer components {
   /* Homw Button CSS */
-
   .button-home {
     font-weight: 600;
     letter-spacing: 1px;
@@ -43,10 +42,4 @@ body {
     border-left: 5px solid #ffe54c;
     padding-left: 10px;
   }
-
-  /* @media (min-width: 768px) {
-    .button-home {
-      padding: 13px 50px 13px;
-    }
-  } */
 }
