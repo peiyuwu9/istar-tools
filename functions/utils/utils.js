@@ -107,3 +107,7 @@ export function generateTimeStamp() {
   // example: 20240309131523
   return year + month + date + hours + minutes + seconds;
 }
+
+export function isPositiveInteger(value) {
+  return !Number.isNaN(value) && Number.isInteger(value) && value > 0;
+}

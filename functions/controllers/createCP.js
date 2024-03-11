@@ -55,8 +55,9 @@ export default async function (req, res) {
 
     // add cp data to database
     const doc = {
-      title: cpFileName,
+      name: cpFileName,
       url: downloadUrl,
+      customer,
     };
     await addNewDoc("cps", doc);
   } catch (err) {
