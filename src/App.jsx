@@ -1,14 +1,15 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { routeConstants } from "@/constants";
 
 import Home from "@/routes/Home.jsx";
-import CustomerProposal from "@/routes/CustomerProposal.jsx";
+import CustomerProposals from "@/routes/CustomerProposals.jsx";
 
 import Layout from "@/components/Layout.jsx";
 import { getCustomerProposals, getCsutomers } from "@/lib/actions.js";
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: routeConstants["home"].path,
     element: <Layout />,
     children: [
       {
@@ -16,8 +17,8 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "customer-proposal",
-        element: <CustomerProposal />,
+        path: routeConstants["customer-proposals"].path,
+        element: <CustomerProposals />,
         loader: async () => {
           const data = await Promise.all([
             getCustomerProposals("program", 1, 10),

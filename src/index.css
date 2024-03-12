@@ -40,6 +40,6 @@ body {
 
   .active {
     border-left: 4px solid #ffe54c;
-    padding-left: 10px;
+    padding-left: 6px;
   }
 }
