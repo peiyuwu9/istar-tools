@@ -4,7 +4,7 @@ import Home from "@/routes/Home.jsx";
 import CustomerProposal from "@/routes/CustomerProposal.jsx";
 
 import Layout from "@/components/Layout.jsx";
-import { getCPList } from "@/lib/actions.js";
+import { getCustomerProposals, getCsutomers } from "@/lib/actions.js";
 
 const router = createBrowserRouter([
   {
@@ -18,7 +18,13 @@ const router = createBrowserRouter([
       {
         path: "customer-proposal",
         element: <CustomerProposal />,
-        loader: async () => getCPList("name", 1, 10),
+        loader: async () => {
+          const data = await Promise.all([
+            getCustomerProposals("program", 1, 10),
+            getCsutomers("name", 1, 100),
+          ]);
+          return { customerProposals: data[0], customers: data[1] };
+        },
       },
     ],
   },

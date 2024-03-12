@@ -1,11 +1,16 @@
 import { Router } from "express";
 
-import getCPList from "../controllers/getCPList.js";
-import createCP from "../controllers/createCP.js";
+import getCustomerProposals from "../controllers/getCustomerProposals.js";
+import createCustomerProposal from "../controllers/createCustomerProposal.js";
+import getCustomers from "../controllers/getCustomers.js";
 
 const routes = Router();
 
-routes.get("/cps", getCPList);
-routes.post("/cp", createCP);
+// customer proposal
+routes.get("/customer-proposals", getCustomerProposals);
+routes.post("/customer-proposal", createCustomerProposal);
+
+// customer
+routes.get("/customers", getCustomers);
 
 export default routes;

@@ -55,11 +55,11 @@ export default async function (req, res) {
 
     // add cp data to database
     const doc = {
-      name: cpFileName,
-      url: downloadUrl,
+      program,
       customer,
+      url: downloadUrl,
     };
-    await addNewDoc("cps", doc);
+    await addNewDoc("customer_proposals", doc);
   } catch (err) {
     console.log(err);
     return res.status(500).send("Internal Server Error");
