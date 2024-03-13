@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useLoaderData } from "react-router";
 import { Download } from "lucide-react";
 import { formatDate } from "@/lib/utils";
@@ -9,10 +8,7 @@ import CustomerProposalFrom from "@/components/CustomerProposalForm";
 
 export default function CustomerProposals() {
   const { customerProposals } = useLoaderData();
-  const [limit, setLimit] = useState(10);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPage, setTotalPage] = useState(1);
-  const [open, setOpen] = useState(false);
+  console.log(customerProposals);
 
   const columns = [
     {

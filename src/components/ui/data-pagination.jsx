@@ -23,7 +23,7 @@ export function DataTablePagination({ table }) {
       <div className="flex items-center gap-2">
         <Select>
           <SelectTrigger className="w-[70px]">
-            <SelectValue placeholder={1} />
+            <SelectValue placeholder={10} />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="10">10</SelectItem>

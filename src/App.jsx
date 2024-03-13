@@ -20,8 +20,9 @@ const router = createBrowserRouter([
         path: routeConstants["customer-proposals"].path.get,
         element: <CustomerProposals />,
         loader: async () => {
+          const currentYear = new Date().getFullYear();
           const data = await Promise.all([
-            getCustomerProposals("program", 1, 10),
+            getCustomerProposals(currentYear),
             getCsutomers("name", 1, 100),
           ]);
           return { customerProposals: data[0], customers: data[1] };

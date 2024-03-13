@@ -61,10 +61,9 @@ export default function CustomerProposalFrom() {
 
   async function handleSubmit(data) {
     setLoading(true);
-    // const res = await createCustomerProposal(data);
+    const res = await createCustomerProposal(data);
     form.reset();
-    // return setLoading(false);
-    return;
+    return setLoading(false);
   }
 
   return (
@@ -140,7 +139,11 @@ export default function CustomerProposalFrom() {
             <Button variant="destructive" onClick={handleClose}>
               Cancel
             </Button>
-            <Button type="submit" form="customer-proposal-form" disabled={loading}>
+            <Button
+              type="submit"
+              form="customer-proposal-form"
+              disabled={loading}
+            >
               Create
             </Button>
           </DialogFooter>

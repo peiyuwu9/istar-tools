@@ -15,8 +15,22 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export function DataTable({ columns, data, children }) {
+  // only list 5 years data
+  const currentYear = new Date().getFullYear();
+  const yearSelections = [];
+  for (let i = 0; i < 5; i++) {
+    yearSelections.push(currentYear - i);
+  }
+
   const table = useReactTable({
     data,
     columns,
@@ -27,12 +41,26 @@ export function DataTable({ columns, data, children }) {
   return (
     <>
       <div className="flex justify-between items-center mb-4">
-        <Input
-          placeholder="Search"
-          // value=""
-          // onChange={}
-          className="max-w-sm"
-        />
+        <div className="flex gap-4">
+          <Select>
+            <SelectTrigger className="w-[130px]">
+              <SelectValue placeholder={currentYear} />
+            </SelectTrigger>
+            <SelectContent>
+              {yearSelections.map((year) => (
+                <SelectItem value={year} key={year}>
+                  {year}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Input
+            placeholder="Search"
+            // value=""
+            // onChange={}
+            className="w-96"
+          />
+        </div>
         {children}
       </div>
       <div className="rounded-md border mb-4">
