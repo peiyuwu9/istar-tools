@@ -6,6 +6,7 @@ import routes from "./routes/index.js";
 
 const server = express();
 server.use(express.json());
+server.use(express.urlencoded());
 server.use("/api", routes);
 
 const firebaseConfig = {

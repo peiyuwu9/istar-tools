@@ -1,15 +1,15 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { getCustomerProposals, getCsutomers } from "@/lib/actions.js";
 import { routeConstants } from "@/constants";
 
 import Home from "@/routes/Home.jsx";
 import CustomerProposals from "@/routes/CustomerProposals.jsx";
 
 import Layout from "@/components/Layout.jsx";
-import { getCustomerProposals, getCsutomers } from "@/lib/actions.js";
 
 const router = createBrowserRouter([
   {
-    path: routeConstants["home"].path,
+    path: routeConstants["home"].path.get,
     element: <Layout />,
     children: [
       {
@@ -17,7 +17,7 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: routeConstants["customer-proposals"].path,
+        path: routeConstants["customer-proposals"].path.get,
         element: <CustomerProposals />,
         loader: async () => {
           const data = await Promise.all([

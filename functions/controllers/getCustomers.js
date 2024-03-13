@@ -7,7 +7,7 @@ export default async function (req, res) {
   const limitNum = parseFloat(req.query.limitNum);
 
   if (!isPositiveInteger(pageNum) || !isPositiveInteger(limitNum))
-    return res.status(400).send("Invalid Query Format");
+    return res.status(400).send({ message: "Invalid Query Format" });
 
   let data = [];
 
@@ -15,7 +15,7 @@ export default async function (req, res) {
     data = await getList("customers", orderByCol, pageNum, limitNum);
   } catch (err) {
     console.log(err);
-    return res.status(500).send("Internal Server Error");
+    return res.status(500).send({ message: "Internal Server Error" });
   }
 
   return res.status(200).send(data);

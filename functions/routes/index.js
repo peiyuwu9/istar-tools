@@ -9,15 +9,15 @@ const routes = Router();
 
 // customer proposal
 routes.get(
-  `/${routeConstants["customer-proposals"].path}`,
+  `/${routeConstants["customer-proposals"].path.get}`,
   getCustomerProposals
 );
-routes.get(
-  `/${routeConstants["customer-proposal"].path}`,
+routes.post(
+  `/${routeConstants["customer-proposal"].path.post}`,
   createCustomerProposal
 );
 
 // customer
-routes.get(`/${routeConstants["customers"].path}`, getCustomers);
+routes.get(`/${routeConstants["customers"].path.get}`, getCustomers);
 
 export default routes;
