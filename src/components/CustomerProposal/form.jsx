@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { createCustomerProposal } from "@/lib/actions";
 import { PacmanLoader } from "react-spinners";
+import { dataSchemaSpec } from "@/constants";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -39,7 +40,7 @@ const formSchema = z.object({
     .transform((val) => (val ? val.replaceAll("\n", ",") : z.NEVER)),
 });
 
-export default function CustomerProposalFrom() {
+export function CustomerProposalForm() {
   const { customers } = useLoaderData();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -92,9 +93,13 @@ export default function CustomerProposalFrom() {
                 name="customer"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Customer</FormLabel>
+                    <FormLabel className="mr-4">Customer</FormLabel>
                     <FormControl>
-                      <Combobox selections={customers} {...field} />
+                      <Combobox
+                        selections={customers}
+                        value={field.value}
+                        onChange={field.onChange}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -108,7 +113,7 @@ export default function CustomerProposalFrom() {
                     <FormLabel>Program</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Enter program name here..."
+                        placeholder={`Max ${dataSchemaSpec.customerProposalProgramMaxLength} characters here...`}
                         {...field}
                       />
                     </FormControl>
@@ -124,7 +129,7 @@ export default function CustomerProposalFrom() {
                     <FormLabel>Style Numbers</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Please enter newline for each style..."
+                        placeholder="Enter newline for each style..."
                         className="h-[200px]"
                         {...field}
                       />

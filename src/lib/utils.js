@@ -16,3 +16,19 @@ export function formatDate(timestamp) {
     second: "numeric",
   }).format(timestamp);
 }
+
+export function getPaginationPages(page, totalPage) {
+  let paginationPage = [];
+
+  if (totalPage < 5) {
+    for (let i = 1; i <= totalPage; i++) {
+      paginationPage.push(i);
+    }
+  } else {
+    for (let i = -2; i <= 2; i++) {
+      paginationPage.push(page);
+    }
+  }
+
+  return paginationPage;
+}

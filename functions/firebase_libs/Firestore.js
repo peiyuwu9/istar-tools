@@ -6,23 +6,11 @@ import {
   doc,
   serverTimestamp,
   query,
-  orderBy,
-  where,
 } from "firebase/firestore";
 
-export async function getList(collec, year) {
+export async function getList(collec, querys = []) {
   const db = getFirestore();
-  const firstDateofCurrentYear = new Date(year, 0, 1);
-  const firstDateOfNextYear = new Date(year + 1, 0, 1);
-
-  const q = query(
-    collection(db, collec),
-    orderBy("created_at", "desc"),
-    where("created_at", ">=", firstDateofCurrentYear),
-    where("created_at", "<", firstDateOfNextYear)
-  );
-  const res = await getDocs(q);
-
+  const res = await getDocs(query(collection(db, collec), ...querys));
   return res.docs.map((doc) => doc.data());
 }
 

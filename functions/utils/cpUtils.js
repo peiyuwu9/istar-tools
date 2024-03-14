@@ -28,12 +28,9 @@ export function formatDataForExcel(data) {
   // prepare row data
   data.forEach((style) => {
     const temp = [];
-    titles.forEach((title, index) => {
-      let value =
-        style.JewelryDetails[title] &&
-        style.JewelryDetails[title].hasOwnProperty("value")
-          ? style.JewelryDetails[title].value
-          : "";
+    titles.forEach((title) => {
+      // ?? only checks null and undefined
+      let value = style.JewelryDetails[title]?.value ?? "";
 
       if (columnType[title] === "percentage" && !isNaN(value))
         value = value / 100;

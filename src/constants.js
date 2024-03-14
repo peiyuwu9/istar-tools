@@ -29,3 +29,7 @@ export const routeConstants = {
     },
   },
 };
+
+export const dataSchemaSpec = {
+  customerProposalProgramMaxLength: 30,
+};

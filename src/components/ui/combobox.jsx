@@ -17,8 +17,7 @@ import {
 } from "@/components/ui/popover";
 import { CommandList } from "cmdk";
 
-const Combobox = React.forwardRef(({ selections, ...props }, ref) => {
-  const { value, onChange } = props;
+const Combobox = React.forwardRef(({ selections, value, onChange }, ref) => {
   const [open, setOpen] = React.useState(false);
 
   return (
@@ -28,7 +27,7 @@ const Combobox = React.forwardRef(({ selections, ...props }, ref) => {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between ml-4"
+          className="w-[200px] justify-between"
         >
           {value
             ? selections.find((selection) => selection.name === value)?.name

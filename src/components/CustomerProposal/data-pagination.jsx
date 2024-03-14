@@ -1,4 +1,5 @@
-import { cn } from "@/lib/utils";
+import { useEffect, useState } from "react";
+import { cn, getPaginationPages } from "@/lib/utils";
 
 import {
   Select,
@@ -18,12 +19,25 @@ import {
 } from "@/components/ui/pagination";
 
 export function DataTablePagination({ table }) {
+  const [pagination, setPagination] = useState([1]);
+  const currentPage = table.getState().pagination.pageIndex + 1;
+  const totalPage = table.getPageCount();
+
+  useEffect(() => {
+    setPagination(getPaginationPages(currentPage, totalPage));
+  }, [currentPage, totalPage]);
+
   return (
     <div className="flex justify-between">
       <div className="flex items-center gap-2">
-        <Select>
+        <Select
+          value={`${table.getState().pagination.pageSize}`}
+          onValueChange={(value) => {
+            table.setPageSize(Number(value));
+          }}
+        >
           <SelectTrigger className="w-[70px]">
-            <SelectValue placeholder={10} />
+            <SelectValue />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="10">10</SelectItem>
@@ -45,19 +59,27 @@ export function DataTablePagination({ table }) {
           >
             <PaginationPrevious />
           </PaginationItem>
-          {/* {totalPage > 2 && currentPage > 2 && (
+          {totalPage > 5 && currentPage > 2 && (
             <PaginationItem>
               <PaginationEllipsis />
             </PaginationItem>
-          )} */}
-          <PaginationItem className="cursor-pointer">
-            <PaginationLink isActive>1</PaginationLink>
-          </PaginationItem>
-          {/* {totalPage > 2 && currentPage < totalPage - 1 && (
+          )}
+          {pagination.map((pageNum) => (
+            <PaginationItem
+              className="cursor-pointer"
+              key={pageNum}
+              onClick={() => table.setPageIndex(pageNum - 1)}
+            >
+              <PaginationLink isActive={pageNum === currentPage}>
+                {pageNum}
+              </PaginationLink>
+            </PaginationItem>
+          ))}
+          {totalPage > 5 && currentPage < totalPage - 1 && (
             <PaginationItem>
               <PaginationEllipsis />
             </PaginationItem>
-          )} */}
+          )}
           <PaginationItem
             className={cn(
               !table.getCanNextPage()

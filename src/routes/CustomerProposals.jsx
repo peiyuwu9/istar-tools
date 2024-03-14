@@ -2,13 +2,12 @@ import { useLoaderData } from "react-router";
 import { Download } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 
-import { DataTable } from "@/components/ui/data-table";
+import { DataTable } from "@/components/CustomerProposal/data-table";
+import { CustomerProposalForm } from "@/components/CustomerProposal/form";
 import { Badge } from "@/components/ui/badge";
-import CustomerProposalFrom from "@/components/CustomerProposalForm";
 
 export default function CustomerProposals() {
   const { customerProposals } = useLoaderData();
-  console.log(customerProposals);
 
   const columns = [
     {
@@ -53,7 +52,7 @@ export default function CustomerProposals() {
 
   return (
     <DataTable columns={columns} data={customerProposals}>
-      <CustomerProposalFrom />
+      <CustomerProposalForm />
     </DataTable>
   );
 }

@@ -1,3 +1,4 @@
+import { orderBy, where } from "firebase/firestore";
 import { getList } from "../firebase_libs/Firestore.js";
 import { isPositiveInteger } from "../utils/utils.js";
 
@@ -16,7 +17,14 @@ export default async function (req, res) {
   let data = [];
 
   try {
-    data = await getList("customer_proposals", year);
+    const firstDateofCurrentYear = new Date(year, 0, 1);
+    const firstDateOfNextYear = new Date(year + 1, 0, 1);
+    const query = [
+      orderBy("created_at", "desc"),
+      where("created_at", ">=", firstDateofCurrentYear),
+      where("created_at", "<", firstDateOfNextYear),
+    ];
+    data = await getList("customer_proposals", query);
   } catch (err) {
     console.log(err);
     return res.status(500).send({ message: "Internal Server Error" });
