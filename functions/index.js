@@ -2,11 +2,17 @@ import { onRequest } from "firebase-functions/v2/https";
 import { setGlobalOptions } from "firebase-functions/v2";
 import { initializeApp } from "firebase/app";
 import express from "express";
+import cors from "cors";
 import routes from "./routes/index.js";
 
 const server = express();
 server.use(express.json());
 server.use(express.urlencoded());
+server.use(
+  cors({
+    origin: process.env.FRONTEND_DOMAIN,
+  })
+);
 server.use("/api", routes);
 
 const firebaseConfig = {

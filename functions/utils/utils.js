@@ -1,6 +1,6 @@
 import sharp from "sharp";
 
-export function isLoggedinAcumatica(AcumaticaSession) {
+export function isAcumaticaExpired(AcumaticaSession) {
   return (
     !AcumaticaSession ||
     !AcumaticaSession?.expiration ||

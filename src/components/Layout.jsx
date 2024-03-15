@@ -1,10 +1,14 @@
+import { useRef, useState } from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
+import useResizeObserver from "@react-hook/resize-observer";
 import { BarChart3, Home } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { routeConstants } from "@/constants";
 
 export default function Root() {
   const location = useLocation();
+  const target = useRef(null);
+  const [contentSize, setContentSize] = useState();
   const navLinks = {
     home: {
       icon: <Home />,
@@ -13,6 +17,8 @@ export default function Root() {
       icon: <BarChart3 />,
     },
   };
+
+  useResizeObserver(target, (entry) => setContentSize(entry.contentRect));
 
   return (
     <div className="flex text-md">
@@ -42,7 +48,7 @@ export default function Root() {
         </nav>
       </div>
       <div id="content" className="flex-1 min-w-[900px] p-3">
-        <h1 className="text-4xl px-10 py-5 tracking-wider">
+        <h1 className="text-4xl px-8 py-5 tracking-wider">
           {
             routeConstants[
               location.pathname === "/" ? "home" : location.pathname.slice(1)
@@ -50,10 +56,11 @@ export default function Root() {
           }
         </h1>
         <div
+          ref={target}
           id="container"
-          className="h-[calc(100vh-112px)] p-10 bg-white rounded-lg shadow"
+          className="h-[calc(100vh-112px)] p-8 bg-white rounded-lg shadow"
         >
-          <Outlet />
+          <Outlet context={contentSize} />
         </div>
       </div>
     </div>

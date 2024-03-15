@@ -17,18 +17,35 @@ export function formatDate(timestamp) {
   }).format(timestamp);
 }
 
-export function getPaginationPages(page, totalPage) {
+export function getPaginationPages(currentPage, totalPage) {
   let paginationPage = [];
 
-  if (totalPage < 5) {
+  if (totalPage <= 5) {
     for (let i = 1; i <= totalPage; i++) {
+      paginationPage.push(i);
+    }
+  } else if (currentPage < 3) {
+    for (let i = 1; i <= 5; i++) {
+      paginationPage.push(i);
+    }
+  } else if (currentPage > totalPage - 2) {
+    for (let i = totalPage - 4; i <= totalPage; i++) {
       paginationPage.push(i);
     }
   } else {
     for (let i = -2; i <= 2; i++) {
-      paginationPage.push(page);
+      paginationPage.push(currentPage + i);
     }
   }
 
   return paginationPage;
+}
+
+export function calculateRowCount(contentSize) {
+  // shadcn data table row height is 60px
+  return contentSize?.height
+    ? Math.floor(contentSize.height / 60) > 3
+      ? Math.floor(contentSize.height / 60) - 3
+      : 1
+    : 0;
 }

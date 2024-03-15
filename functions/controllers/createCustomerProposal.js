@@ -1,6 +1,6 @@
 import {
   formatStylesQuery,
-  isLoggedinAcumatica,
+  isAcumaticaExpired,
   loginAcumatica,
 } from "../utils/utils.js";
 import {
@@ -25,7 +25,7 @@ export default async function (req, res) {
 
   try {
     // check if seesion expired
-    if (isLoggedinAcumatica(global.AcumaticaSession)) await loginAcumatica();
+    if (isAcumaticaExpired(global.AcumaticaSession)) await loginAcumatica();
 
     // retrieve stock item data
     data = await getStockItemData(global.AcumaticaSession.Cookie, query);
@@ -35,7 +35,6 @@ export default async function (req, res) {
       await loginAcumatica();
       data = await getStockItemData(global.AcumaticaSession.Cookie, query);
     }
-    console.log(err);
     return res.status(500).send({ message: "Internal Server Error" });
   }
 

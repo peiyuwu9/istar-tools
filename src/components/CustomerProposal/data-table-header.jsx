@@ -10,10 +10,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useLoaderData } from "react-router";
 
-export function DataTableHearder({ children, ...props }) {
-  const { customers, table } = props;
-
+export function DataTableHearder({ children, table }) {
+  const { customers } = useLoaderData();
   // only list 5 years data
   const currentYear = new Date().getFullYear();
   const yearSelections = [];
