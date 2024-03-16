@@ -1,12 +1,14 @@
 import { useRef, useState } from "react";
-import { NavLink, Outlet, useLocation } from "react-router-dom";
+import { NavLink, Outlet, useLocation, useNavigation } from "react-router-dom";
 import useResizeObserver from "@react-hook/resize-observer";
 import { BarChart3, Home } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { routeConstants } from "@/constants";
+import { BarLoader } from "react-spinners";
 
 export default function Root() {
-  const location = useLocation();
+  const { pathname } = useLocation();
+  const navigation = useNavigation();
   const target = useRef(null);
   const [contentSize, setContentSize] = useState();
   const navLinks = {
@@ -49,18 +51,21 @@ export default function Root() {
       </div>
       <div id="content" className="flex-1 min-w-[900px] p-3">
         <h1 className="text-4xl px-8 py-5 tracking-wider">
-          {
-            routeConstants[
-              location.pathname === "/" ? "home" : location.pathname.slice(1)
-            ].title
-          }
+          {routeConstants[pathname === "/" ? "home" : pathname.slice(1)].title}
         </h1>
         <div
           ref={target}
           id="container"
           className="h-[calc(100vh-112px)] p-8 bg-white rounded-lg shadow"
         >
-          <Outlet context={contentSize} />
+          {navigation.state === "loading" ? (
+            <div className="w-full h-full flex flex-col gap-3 justify-center items-center">
+              <p>Loading...</p>
+              <BarLoader color="#ffe54c" />
+            </div>
+          ) : (
+            <Outlet context={contentSize} />
+          )}
         </div>
       </div>
     </div>

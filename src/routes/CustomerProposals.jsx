@@ -22,6 +22,7 @@ export default function CustomerProposals() {
           <Badge>{row.original.customer}</Badge>
         </div>
       ),
+      size: 100,
     },
     {
       accessorKey: "created_at",
@@ -34,6 +35,7 @@ export default function CustomerProposals() {
           </div>
         );
       },
+      size: 100,
     },
     {
       id: "actions",
@@ -47,6 +49,7 @@ export default function CustomerProposals() {
           </div>
         );
       },
+      size: 50,
     },
   ];
 

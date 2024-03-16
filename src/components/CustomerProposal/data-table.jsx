@@ -71,7 +71,12 @@ export function DataTable({ children, columns, data }) {
                     table.getRowModel().rows.map((row) => (
                       <TableRow key={row.id}>
                         {row.getVisibleCells().map((cell) => (
-                          <TableCell key={cell.id}>
+                          <TableCell
+                            key={cell.id}
+                            style={{
+                              width: cell.column.getSize(),
+                            }}
+                          >
                             {flexRender(
                               cell.column.columnDef.cell,
                               cell.getContext()

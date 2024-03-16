@@ -10,7 +10,7 @@ server.use(express.json());
 server.use(express.urlencoded());
 server.use(
   cors({
-    origin: process.env.FRONTEND_DOMAIN,
+    origin: process.env.MODE === "DEV" ? "*" : process.env.FRONTEND_DOMAIN,
   })
 );
 server.use("/api", routes);

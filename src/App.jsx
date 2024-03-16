@@ -6,6 +6,7 @@ import Home from "@/routes/Home.jsx";
 import CustomerProposals from "@/routes/CustomerProposals.jsx";
 
 import Layout from "@/components/Layout.jsx";
+import ErrorPage from "@/components/ErrorPage";
 
 const router = createBrowserRouter([
   {
@@ -27,8 +28,10 @@ const router = createBrowserRouter([
           ]);
           return { customerProposals: data[0], customers: data[1] };
         },
+        errorElement: <ErrorPage />,
       },
     ],
+    errorElement: <ErrorPage />,
   },
 ]);
 
