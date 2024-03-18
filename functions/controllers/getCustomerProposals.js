@@ -1,12 +1,12 @@
 import { orderBy, where } from "firebase/firestore";
 import { getList } from "../firebase_libs/Firestore.js";
-import { isPositiveInteger } from "../utils/utils.js";
+import { isValidYear } from "../utils/utils.js";
 
 export default async function (req, res) {
   const year = parseFloat(req.query.year);
-  const currentYear = new Date().getFullYear();
 
-  if (!isPositiveInteger(year) || year < 2000 || year > currentYear)
+  // only take year 2000 to current year
+  if (!isValidYear(year))
     return res.status(400).send({ message: "Invalid Year" });
 
   if (year < 2010)

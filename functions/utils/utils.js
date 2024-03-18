@@ -111,3 +111,10 @@ export function generateTimeStamp() {
 export function isPositiveInteger(value) {
   return !Number.isNaN(value) && Number.isInteger(value) && value > 0;
 }
+
+// only take year 2000 to current year
+export function isValidYear(value) {
+  const year = parseFloat(value);
+  const currentYear = new Date().getFullYear();
+  return isPositiveInteger(year) && year <= currentYear;
+}

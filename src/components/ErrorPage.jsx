@@ -5,7 +5,9 @@ export default function ErrorPage() {
   const error = useRouteError();
   console.error(error);
   if (error?.status === 404)
-    return <img src="./404-page.jpg" className="w-full h-screen" />;
+    return (
+      <div className="w-full h-screen bg-[url('./404-page.jpg')] bg-no-repeat bg-cover bg-center"></div>
+    );
   return (
     <div className="w-full h-full flex flex-col justify-center items-center gap-2">
       <Beer size={45} color="#ffe54c" />
