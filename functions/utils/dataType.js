@@ -22,4 +22,10 @@ export const columnType = {
   Freight_Cost: "dollar",
   Duty_Percentage: "percentage",
   Duty_Cost: "dollar",
+  Market_Value_1: "dollar",
+  Unit_Cost_1: "dollar",
+  Market_Value_2: "dollar",
+  Unit_Cost_2: "dollar",
+  Market_Value_3: "dollar",
+  Unit_Cost_3: "dollar",
 };

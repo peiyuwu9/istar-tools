@@ -1,13 +1,33 @@
-import { useLoaderData } from "react-router";
+import { useState } from "react";
 import { Download } from "lucide-react";
 import { formatDate } from "@/lib/utils";
+import { getCustomerProposals } from "@/lib/actions";
+import {
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
 
 import { DataTable } from "@/components/CustomerProposal/data-table";
+import { DataTablePagination } from "@/components/CustomerProposal/data-pagination";
+import { DataTableHearder } from "@/components/CustomerProposal/data-table-header";
 import { CustomerProposalForm } from "@/components/CustomerProposal/form";
 import { Badge } from "@/components/ui/badge";
+import Loading from "@/components/Loading";
+import { useQuery } from "react-query";
+import ErrorPage from "../components/ErrorPage";
 
 export default function CustomerProposals() {
-  const { customerProposals } = useLoaderData();
+  const [year, setYear] = useState(new Date().getFullYear());
+  const [columnFilters, setColumnFilters] = useState([]);
+  const { isLoading, data } = useQuery(
+    ["customerProposals", year],
+    () => getCustomerProposals(year),
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
 
   const columns = [
     {
@@ -53,9 +73,35 @@ export default function CustomerProposals() {
     },
   ];
 
+  const table = useReactTable({
+    data,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    onColumnFiltersChange: setColumnFilters,
+    getFilteredRowModel: getFilteredRowModel(),
+    state: {
+      columnFilters,
+    },
+  });
+
   return (
-    <DataTable columns={columns} data={customerProposals}>
-      <CustomerProposalForm />
-    </DataTable>
+    <div className="h-full flex flex-col justify-between">
+      <DataTableHearder table={table} year={year} setYear={setYear}>
+        <CustomerProposalForm />
+      </DataTableHearder>
+      {data?.message ? (
+        <ErrorPage message={data.message} />
+      ) : isLoading ? (
+        <Loading />
+      ) : (
+        <>
+          <div className="flex-1">
+            <DataTable columns={columns} table={table} />
+          </div>
+          <DataTablePagination table={table} />
+        </>
+      )}
+    </div>
   );
 }

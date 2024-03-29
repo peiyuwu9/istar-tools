@@ -7,12 +7,12 @@ export default async function (req, res) {
 
   // only take year 2000 to current year
   if (!isValidYear(year))
-    return res.status(400).send({ message: "Invalid Year" });
+    return res.status(400).send({ message: "Invalid Year!" });
 
   if (year < 2010)
     return res
       .status(400)
-      .send({ message: "Cannot Query Data Before Year 2010" });
+      .send({ message: "Cannot Query Data Before Year 2010!" });
 
   let data = [];
 
@@ -27,7 +27,7 @@ export default async function (req, res) {
     data = await getList("customer_proposals", query);
   } catch (err) {
     console.log(err);
-    return res.status(500).send({ message: "Internal Server Error" });
+    return res.status(500).send({ message: "Internal Server Error!" });
   }
 
   return res.status(200).send(data);

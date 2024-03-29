@@ -1,15 +1,14 @@
 import { useRef, useState } from "react";
-import { NavLink, Outlet, useLocation, useNavigation } from "react-router-dom";
+import { NavLink, Outlet, useLoaderData, useLocation } from "react-router-dom";
 import useResizeObserver from "@react-hook/resize-observer";
 import { BarChart3, Home } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { routeConstants } from "@/constants";
-import { BarLoader } from "react-spinners";
 
 export default function Root() {
   const { pathname } = useLocation();
-  const navigation = useNavigation();
   const target = useRef(null);
+  const { customers } = useLoaderData();
   const [contentSize, setContentSize] = useState();
   const navLinks = {
     home: {
@@ -58,14 +57,7 @@ export default function Root() {
           id="container"
           className="h-[calc(100vh-112px)] p-8 bg-white rounded-lg shadow"
         >
-          {navigation.state === "loading" ? (
-            <div className="w-full h-full flex flex-col gap-3 justify-center items-center">
-              <p>Loading...</p>
-              <BarLoader color="#ffe54c" />
-            </div>
-          ) : (
-            <Outlet context={contentSize} />
-          )}
+          <Outlet context={{ customers, contentSize }} />
         </div>
       </div>
     </div>

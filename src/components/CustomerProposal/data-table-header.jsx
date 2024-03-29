@@ -1,5 +1,6 @@
 import { Search } from "lucide-react";
 import { dataSchemaSpec } from "@/constants";
+import { useOutletContext } from "react-router";
 
 import { Input } from "@/components/ui/input";
 import { Combobox } from "@/components/ui/combobox";
@@ -10,10 +11,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useLoaderData } from "react-router";
 
-export function DataTableHearder({ children, table }) {
-  const { customers } = useLoaderData();
+export function DataTableHearder({ children, table, year, setYear }) {
+  const { customers } = useOutletContext();
   // only list 5 years data
   const currentYear = new Date().getFullYear();
   const yearSelections = [];
@@ -24,7 +24,7 @@ export function DataTableHearder({ children, table }) {
   return (
     <div className="flex justify-between items-center mb-4">
       <div className="flex gap-2">
-        <Select value={""} onValueChange={(value) => {}}>
+        <Select value={year} onValueChange={(value) => setYear(value)}>
           <SelectTrigger className="w-[130px]">
             <SelectValue placeholder={currentYear} />
           </SelectTrigger>

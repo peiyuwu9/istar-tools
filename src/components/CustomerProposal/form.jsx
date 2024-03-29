@@ -1,17 +1,19 @@
 import { useState } from "react";
-import { useLoaderData } from "react-router";
+import { useOutletContext } from "react-router";
 import { Plus } from "lucide-react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useMutation } from "react-query";
+import toast, { Toaster } from "react-hot-toast";
 import { createCustomerProposal } from "@/lib/actions";
-import { PacmanLoader } from "react-spinners";
 import { dataSchemaSpec } from "@/constants";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Combobox } from "@/components/ui/combobox";
+import Submitting from "@/components/Submitting";
 import {
   Dialog,
   DialogContent,
@@ -30,28 +32,44 @@ import {
 } from "@/components/ui/form";
 
 const formSchema = z.object({
-  customer: z.string().min(1, { message: "Please select customer" }),
   program: z.string().trim().min(1, { message: "Please enter program name" }),
+  customer: z.string().min(1, { message: "Please select customer" }),
   // exmaple: BBY100162011\nSSS100163011 ->  BBY100162011,SSS100163011
   styles: z
     .string()
     .trim()
     .min(12, { message: "Please enter at least one valid style number" })
     .transform((val) => (val ? val.replaceAll("\n", ",") : z.NEVER)),
+  market1: z.coerce.number().optional(),
+  market2: z.coerce.number().optional(),
+  market3: z.coerce.number().optional(),
 });
 
 export function CustomerProposalForm() {
-  const { customers } = useLoaderData();
+  const { customers } = useOutletContext();
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const { mutate, isLoading, isError, isSuccess } = useMutation(
+    (data) => createCustomerProposal(data),
+    {
+      onSuccess: () => {
+        toast.success("CP Creation Successful!");
+      },
+      onError: () => {
+        toast.error("CP Creation Failed!");
+      },
+    }
+  );
 
   // define form
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      customer: "",
       program: "",
+      customer: "",
       styles: "",
+      market1: "",
+      market2: "",
+      market3: "",
     },
   });
 
@@ -60,16 +78,14 @@ export function CustomerProposalForm() {
     return setOpen(false);
   }
 
-  async function handleSubmit(data) {
-    setLoading(true);
-    const res = await createCustomerProposal(data);
-    form.reset();
-    return setLoading(false);
+  function handleSubmit(data) {
+    mutate(data);
+    return handleClose();
   }
 
   return (
     <>
-      <Dialog open={loading || open} onOpenChange={setOpen}>
+      <Dialog open={isLoading || open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button size="default" className="text-lg">
             <Plus className="h-5 w-5 mr-2" />
@@ -90,23 +106,6 @@ export function CustomerProposalForm() {
             >
               <FormField
                 control={form.control}
-                name="customer"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="mr-4">Customer</FormLabel>
-                    <FormControl>
-                      <Combobox
-                        selections={customers}
-                        value={field.value}
-                        onChange={field.onChange}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
                 name="program"
                 render={({ field }) => (
                   <FormItem>
@@ -121,23 +120,85 @@ export function CustomerProposalForm() {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="styles"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Style Numbers</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Enter newline for each style..."
-                        className="h-[200px]"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="flex gap-5">
+                <div className="flex flex-col gap-4 w-1/2">
+                  <FormField
+                    control={form.control}
+                    name="customer"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="mr-4">Customer</FormLabel>
+                        <FormControl>
+                          <Combobox
+                            selections={customers}
+                            value={field.value}
+                            onChange={field.onChange}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="styles"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Style Numbers</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Enter newline for each style..."
+                            className="h-[200px]"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="flex flex-col gap-4 w-1/2">
+                  <FormField
+                    control={form.control}
+                    name="market1"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Market Value 1</FormLabel>
+                        <FormControl>
+                          <Input placeholder="e.g. 20.25" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="market2"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Market Value 2</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="market3"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Market Value 3</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
             </form>
           </Form>
           <DialogFooter className="gap-2 sm:gap-0">
@@ -147,21 +208,18 @@ export function CustomerProposalForm() {
             <Button
               type="submit"
               form="customer-proposal-form"
-              disabled={loading}
+              disabled={isLoading}
             >
               Create
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      {loading && (
-        <div className="w-screen h-screen absolute top-0 left-0 flex flex-col justify-center items-center gap-4 bg-slate-300 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-40 z-[100] pointer-events-auto">
-          <PacmanLoader color="#ffe54c" className="-translate-x-5" />
-          <h3 className="text-2xl">
-            We are generating your customer proposal...
-          </h3>
-        </div>
+      {isLoading && (
+        <Submitting>We are generating your customer proposal...</Submitting>
       )}
+      {isError && <Toaster />}
+      {isSuccess && <Toaster />}
     </>
   );
 }

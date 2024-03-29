@@ -1,5 +1,6 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import { getCustomerProposals, getCsutomers } from "@/lib/actions.js";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { createCustomerProposal, getCustomers } from "@/lib/actions.js";
 import { routeConstants } from "@/constants";
 
 import Home from "@/routes/Home.jsx";
@@ -8,10 +9,16 @@ import CustomerProposals from "@/routes/CustomerProposals.jsx";
 import Layout from "@/components/Layout.jsx";
 import ErrorPage from "@/components/ErrorPage";
 
+const queryClient = new QueryClient();
+
 const router = createBrowserRouter([
   {
     path: routeConstants["home"].path.get,
     element: <Layout />,
+    loader: async () => {
+      const customers = await getCustomers();
+      return { customers };
+    },
     children: [
       {
         index: true,
@@ -20,14 +27,6 @@ const router = createBrowserRouter([
       {
         path: routeConstants["customer-proposals"].path.get,
         element: <CustomerProposals />,
-        loader: async () => {
-          const currentYear = new Date().getFullYear();
-          const data = await Promise.all([
-            getCustomerProposals(currentYear),
-            getCsutomers("name", 1, 100),
-          ]);
-          return { customerProposals: data[0], customers: data[1] };
-        },
         errorElement: <ErrorPage />,
       },
     ],
@@ -36,5 +35,9 @@ const router = createBrowserRouter([
 ]);
 
 export default function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
+  );
 }

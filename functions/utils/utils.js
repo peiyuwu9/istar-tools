@@ -118,3 +118,28 @@ export function isValidYear(value) {
   const currentYear = new Date().getFullYear();
   return isPositiveInteger(year) && year <= currentYear;
 }
+
+export function getSilverMatrixBucket(value) {
+  // for example market value is 20.1
+  // temp = 20.1 / 5 = 4.02
+  const temp = value / 5;
+  // basis = 4 * 5 = 20
+  const basis = Math.floor(temp) * 5;
+  // return 20 + 0.25 = 20.25 because 20.1 falles into 20.01 to 20.50 range.
+  // if maker value is 20.0 then return 20 - 0.25 = 19.75 beacuse it falles intp 19.51 to 20.0 range.
+  return temp % 10 === 0 ? basis - 0.25 : basis + 0.25;
+}
+
+export function getPreciousMetalDiscrepancy(
+  metalType,
+  quoteBasis,
+  increment,
+  marketValue
+) {
+  if (metalType === "Sterling Silver") {
+    const matrixBucket = getSilverMatrixBucket(marketValue);
+    return (matrixBucket - quoteBasis) * increment;
+  } else {
+    return (marketValue - quoteBasis) * increment;
+  }
+}

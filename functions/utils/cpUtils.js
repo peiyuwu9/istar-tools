@@ -1,6 +1,10 @@
 import Excel from "exceljs";
-import { generateTimeStamp, resizeAndCompressImage } from "../utils/utils.js";
-import { columnType } from "./cpDataValidation.js";
+import {
+  generateTimeStamp,
+  getPreciousMetalDiscrepancy,
+  resizeAndCompressImage,
+} from "../utils/utils.js";
+import { columnType } from "./dataType.js";
 
 export async function getStockItemData(Cookie, query) {
   const res = await fetch(
@@ -20,7 +24,7 @@ export async function getStockItemData(Cookie, query) {
   return await res.json();
 }
 
-export function formatDataForExcel(data) {
+export function formatDataForExcel(data, value1, value2, value3) {
   const titles = Object.keys(columnType);
   const hearder = titles.map((title) => title.split("_").join(" "));
   const excelData = [hearder];
@@ -28,16 +32,78 @@ export function formatDataForExcel(data) {
   // prepare row data
   data.forEach((style) => {
     const temp = [];
+    let metalType = "";
+    let quoteBasis = 0;
+    let unitCost = 0;
+    let increment = 0;
+
     titles.forEach((title) => {
       // ?? only checks null and undefined
       let value = style.JewelryDetails[title]?.value ?? "";
 
+      if (title === "Metal_Type") metalType = value;
+      if (title === "Quote_Basis") quoteBasis = value || 0;
+      if (title === "Unit_Cost") unitCost = value || 0;
+
       if (columnType[title] === "percentage" && !isNaN(value))
         value = value / 100;
 
-      temp.push(value);
+      if (
+        title === "Increment" &&
+        style.JewelryDetails["Commodity"]?.value === "Gold" &&
+        !isNaN(style.JewelryDetails["Increment_Dollar"]?.value) &&
+        !isNaN(style.JewelryDetails["Gold_Weight_Grams"]?.value)
+      ) {
+        value =
+          style.JewelryDetails["Increment_Dollar"].value *
+          style.JewelryDetails["Gold_Weight_Grams"].value;
+        increment = value;
+      }
+
+      if (title === "Market_Value_1") {
+        if (!value1) return temp.push(["", ""]);
+        const preciousMetalDiscrepancy = getPreciousMetalDiscrepancy(
+          metalType,
+          quoteBasis,
+          increment,
+          value1
+        );
+        return temp.push([value1, unitCost + preciousMetalDiscrepancy]);
+      }
+
+      if (title === "Market_Value_2") {
+        if (!value2) return temp.push(["", ""]);
+        const preciousMetalDiscrepancy = getPreciousMetalDiscrepancy(
+          metalType,
+          quoteBasis,
+          increment,
+          value2
+        );
+        return temp.push([value2, unitCost + preciousMetalDiscrepancy]);
+      }
+
+      if (title === "Market_Value_3") {
+        if (!value3) return temp.push([""]);
+        const preciousMetalDiscrepancy = getPreciousMetalDiscrepancy(
+          metalType,
+          quoteBasis,
+          increment,
+          value3
+        );
+        return temp.push([value3, unitCost + preciousMetalDiscrepancy]);
+      }
+
+      if (
+        title === "Unit_Cost_1" ||
+        title === "Unit_Cost_2" ||
+        title === "Unit_Cost_3"
+      ) {
+        return;
+      }
+
+      return temp.push(value);
     });
-    excelData.push(temp);
+    return excelData.push(temp);
   });
 
   // prepare header styles
@@ -62,6 +128,7 @@ export function formatDataForExcel(data) {
 
     return col;
   });
+
   excelData.push(columnStyle);
 
   return excelData;

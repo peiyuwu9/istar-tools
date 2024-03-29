@@ -18,7 +18,7 @@ import { addNewDoc } from "../firebase_libs/Firestore.js";
 export default async function (req, res) {
   const { customer, program, styles } = req.body;
   if (!styles)
-    return res.status(400).send({ message: "Missing Styles Numbers" });
+    return res.status(400).send({ message: "Missing Styles Numbers!" });
 
   const query = formatStylesQuery(styles);
   let data = [];
@@ -35,7 +35,7 @@ export default async function (req, res) {
       await loginAcumatica();
       data = await getStockItemData(global.AcumaticaSession.Cookie, query);
     }
-    return res.status(500).send({ message: "Internal Server Error" });
+    return res.status(500).send({ message: "Internal Server Error!" });
   }
 
   try {
@@ -62,8 +62,8 @@ export default async function (req, res) {
     await addNewDoc("customer_proposals", doc);
   } catch (err) {
     console.log(err);
-    return res.status(500).send({ message: "Internal Server Error" });
+    return res.status(500).send({ message: "Internal Server Error!" });
   }
 
-  return res.status(200).send({ message: "CP Creation Successful" });
+  return res.status(200).send({ message: "CP Creation Successful!" });
 }
