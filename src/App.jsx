@@ -13,7 +13,7 @@ const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   {
-    path: routeConstants["home"].path.get,
+    path: routeConstants["home"].method.get,
     element: <Layout />,
     loader: async () => {
       const customers = await getCustomers();
@@ -25,7 +25,7 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: routeConstants["customer-proposals"].path.get,
+        path: routeConstants["customer-proposals"].method.get,
         element: <CustomerProposals />,
         errorElement: <ErrorPage />,
       },

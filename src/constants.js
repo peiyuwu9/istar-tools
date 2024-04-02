@@ -2,21 +2,21 @@ export const routeConstants = {
   home: {
     name: "Home",
     title: "Welcome!",
-    path: {
+    method: {
       get: "/",
     },
   },
   "customer-proposals": {
     name: "Customer Proposal",
     title: "Customer Proposal",
-    path: {
+    method: {
       get: "customer-proposals",
     },
   },
   "customer-proposal": {
     name: "Customer Proposal",
     title: "Customer Proposal",
-    path: {
+    method: {
       get: "customer-proposal/:id",
       post: "customer-proposal",
     },
@@ -24,7 +24,7 @@ export const routeConstants = {
   customers: {
     name: "Customer",
     title: "Customers",
-    path: {
+    method: {
       get: "customers",
     },
   },

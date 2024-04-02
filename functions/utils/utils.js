@@ -131,15 +131,12 @@ export function getSilverMatrixBucket(value) {
 }
 
 export function getPreciousMetalDiscrepancy(
-  metalType,
+  commodityType,
   quoteBasis,
   increment,
   marketValue
 ) {
-  if (metalType === "Sterling Silver") {
-    const matrixBucket = getSilverMatrixBucket(marketValue);
-    return (matrixBucket - quoteBasis) * increment;
-  } else {
-    return (marketValue - quoteBasis) * increment;
-  }
+  return commodityType === "Silver"
+    ? (getSilverMatrixBucket(marketValue) - quoteBasis) * increment
+    : (marketValue - quoteBasis) * increment;
 }

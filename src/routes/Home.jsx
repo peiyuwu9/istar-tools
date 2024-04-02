@@ -19,10 +19,10 @@ export default function Home() {
             )
               return null;
 
-            const { name, path } = routeConstants[navLink];
+            const { name, method } = routeConstants[navLink];
 
             return (
-              <Link to={path.get} className="button-home" key={name}>
+              <Link to={method.get} className="button-home" key={name}>
                 {name}
               </Link>
             );

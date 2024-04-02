@@ -14,7 +14,7 @@ import { DataTablePagination } from "@/components/CustomerProposal/data-paginati
 import { DataTableHearder } from "@/components/CustomerProposal/data-table-header";
 import { CustomerProposalForm } from "@/components/CustomerProposal/form";
 import { Badge } from "@/components/ui/badge";
-import Loading from "@/components/Loading";
+import { Loading } from "@/components/ui/loading-dialog";
 import { useQuery } from "react-query";
 import ErrorPage from "../components/ErrorPage";
 

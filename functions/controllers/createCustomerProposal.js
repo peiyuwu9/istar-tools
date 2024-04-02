@@ -16,7 +16,7 @@ import { uploadExcel } from "../firebase_libs/FirebaseStorage.js";
 import { addNewDoc } from "../firebase_libs/Firestore.js";
 
 export default async function (req, res) {
-  const { customer, program, styles } = req.body;
+  const { customer, program, styles, markets } = req.body;
   if (!styles)
     return res.status(400).send({ message: "Missing Styles Numbers!" });
 
@@ -40,7 +40,7 @@ export default async function (req, res) {
 
   try {
     // prepare date for excel
-    const excelData = formatDataForExcel(data);
+    const excelData = formatDataForExcel(data, markets);
 
     // retrieve stock item images
     const imageURLs = formatImagesPath(data);

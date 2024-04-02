@@ -24,15 +24,16 @@ export async function getStockItemData(Cookie, query) {
   return await res.json();
 }
 
-export function formatDataForExcel(data, value1, value2, value3) {
+export function formatDataForExcel(data, markets) {
   const titles = Object.keys(columnType);
   const hearder = titles.map((title) => title.split("_").join(" "));
   const excelData = [hearder];
+  const { market1, market2, market3 } = markets;
 
   // prepare row data
   data.forEach((style) => {
     const temp = [];
-    let metalType = "";
+    let commodityType = style.JewelryDetails["Commodity_Type"]?.value || "";
     let quoteBasis = 0;
     let unitCost = 0;
     let increment = 0;
@@ -41,56 +42,62 @@ export function formatDataForExcel(data, value1, value2, value3) {
       // ?? only checks null and undefined
       let value = style.JewelryDetails[title]?.value ?? "";
 
-      if (title === "Metal_Type") metalType = value;
       if (title === "Quote_Basis") quoteBasis = value || 0;
       if (title === "Unit_Cost") unitCost = value || 0;
 
       if (columnType[title] === "percentage" && !isNaN(value))
         value = value / 100;
 
-      if (
-        title === "Increment" &&
-        style.JewelryDetails["Commodity"]?.value === "Gold" &&
-        !isNaN(style.JewelryDetails["Increment_Dollar"]?.value) &&
-        !isNaN(style.JewelryDetails["Gold_Weight_Grams"]?.value)
-      ) {
-        value =
-          style.JewelryDetails["Increment_Dollar"].value *
-          style.JewelryDetails["Gold_Weight_Grams"].value;
-        increment = value;
+      if (title === "Increment") {
+        if (
+          commodityType === "Gold" &&
+          !isNaN(style.JewelryDetails["Increment_Per_Dollar"]?.value) &&
+          !isNaN(style.JewelryDetails["Gold_Weight_Grams"]?.value)
+        ) {
+          increment =
+            style.JewelryDetails["Increment_Per_Dollar"].value *
+            style.JewelryDetails["Gold_Weight_Grams"].value;
+        }
+        if (
+          commodityType === "Silver" &&
+          !isNaN(style.JewelryDetails["Silver_Weight_Grams"]?.value)
+        ) {
+          increment =
+            style.JewelryDetails["Silver_Weight_Grams"].value * (1 / 31.1);
+        }
       }
 
       if (title === "Market_Value_1") {
-        if (!value1) return temp.push(["", ""]);
+        if (!market1) return temp.push(["", ""]);
         const preciousMetalDiscrepancy = getPreciousMetalDiscrepancy(
-          metalType,
+          commodityType,
           quoteBasis,
           increment,
-          value1
+          market1
         );
-        return temp.push([value1, unitCost + preciousMetalDiscrepancy]);
+        return temp.push([market1, unitCost + preciousMetalDiscrepancy]);
       }
 
       if (title === "Market_Value_2") {
-        if (!value2) return temp.push(["", ""]);
+        if (!market2) return temp.push(["", ""]);
         const preciousMetalDiscrepancy = getPreciousMetalDiscrepancy(
-          metalType,
+          commodityType,
           quoteBasis,
           increment,
-          value2
+          market2
         );
-        return temp.push([value2, unitCost + preciousMetalDiscrepancy]);
+        return temp.push([market2, unitCost + preciousMetalDiscrepancy]);
       }
 
       if (title === "Market_Value_3") {
-        if (!value3) return temp.push([""]);
+        if (!market3) return temp.push(["", ""]);
         const preciousMetalDiscrepancy = getPreciousMetalDiscrepancy(
-          metalType,
+          commodityType,
           quoteBasis,
           increment,
-          value3
+          market3
         );
-        return temp.push([value3, unitCost + preciousMetalDiscrepancy]);
+        return temp.push([market3, unitCost + preciousMetalDiscrepancy]);
       }
 
       if (

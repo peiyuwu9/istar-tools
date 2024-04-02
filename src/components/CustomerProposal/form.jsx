@@ -5,7 +5,6 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
-import toast, { Toaster } from "react-hot-toast";
 import { createCustomerProposal } from "@/lib/actions";
 import { dataSchemaSpec } from "@/constants";
 
@@ -13,7 +12,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Combobox } from "@/components/ui/combobox";
-import Submitting from "@/components/Submitting";
+import { Submit } from "@/components/ui/submit-dialog";
+import { Toaster } from "@/components/ui/toaster";
 import {
   Dialog,
   DialogContent,
@@ -48,16 +48,8 @@ const formSchema = z.object({
 export function CustomerProposalForm() {
   const { customers } = useOutletContext();
   const [open, setOpen] = useState(false);
-  const { mutate, isLoading, isError, isSuccess } = useMutation(
-    (data) => createCustomerProposal(data),
-    {
-      onSuccess: () => {
-        toast.success("CP Creation Successful!");
-      },
-      onError: () => {
-        toast.error("CP Creation Failed!");
-      },
-    }
+  const { mutate, isLoading, isError, isSuccess } = useMutation((data) =>
+    createCustomerProposal(data)
   );
 
   // define form
@@ -79,8 +71,18 @@ export function CustomerProposalForm() {
   }
 
   function handleSubmit(data) {
-    mutate(data);
-    return handleClose();
+    const mutateData = {
+      program: data.program,
+      customer: data.customer,
+      styles: data.styles,
+      markets: {
+        market1: data.market1,
+        market2: data.market2,
+        market3: data.market3,
+      },
+    };
+    mutate(mutateData);
+    return form.reset();
   }
 
   return (
@@ -216,10 +218,12 @@ export function CustomerProposalForm() {
         </DialogContent>
       </Dialog>
       {isLoading && (
-        <Submitting>We are generating your customer proposal...</Submitting>
+        <Submit>We are generating your customer proposal...</Submit>
       )}
-      {isError && <Toaster />}
-      {isSuccess && <Toaster />}
+      {/* {isError && <Toaster status={"error"} message={"CP Creation Failed!"} />}
+      {isSuccess && (
+        <Toaster status={"success"} message={"CP Creation Successed!"} />
+      )} */}
     </>
   );
 }

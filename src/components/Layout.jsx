@@ -32,10 +32,10 @@ export default function Root() {
         </h2>
         <nav className="flex flex-col gap-6 my-16 p-2 w-fit mx-auto">
           {Object.keys(navLinks).map((navLink) => {
-            const { name, path } = routeConstants[navLink];
+            const { name, method } = routeConstants[navLink];
             return (
               <NavLink
-                to={path.get}
+                to={method.get}
                 className={(status) =>
                   cn(status.isActive ? "active" : "", "flex items-center gap-1")
                 }
