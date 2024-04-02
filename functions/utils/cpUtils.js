@@ -41,71 +41,78 @@ export function formatDataForExcel(data, markets) {
     titles.forEach((title) => {
       // ?? only checks null and undefined
       let value = style.JewelryDetails[title]?.value ?? "";
-
-      if (title === "Quote_Basis") quoteBasis = value || 0;
-      if (title === "Unit_Cost") unitCost = value || 0;
+      let valueSet = ["", ""];
 
       if (columnType[title] === "percentage" && !isNaN(value))
         value = value / 100;
 
-      if (title === "Increment") {
-        if (
-          commodityType === "Gold" &&
-          !isNaN(style.JewelryDetails["Increment_Per_Dollar"]?.value) &&
-          !isNaN(style.JewelryDetails["Gold_Weight_Grams"]?.value)
-        ) {
-          increment =
-            style.JewelryDetails["Increment_Per_Dollar"].value *
-            style.JewelryDetails["Gold_Weight_Grams"].value;
-        }
-        if (
-          commodityType === "Silver" &&
-          !isNaN(style.JewelryDetails["Silver_Weight_Grams"]?.value)
-        ) {
-          increment =
-            style.JewelryDetails["Silver_Weight_Grams"].value * (1 / 31.1);
-        }
-      }
-
-      if (title === "Market_Value_1") {
-        if (!market1) return temp.push(["", ""]);
-        const preciousMetalDiscrepancy = getPreciousMetalDiscrepancy(
-          commodityType,
-          quoteBasis,
-          increment,
-          market1
-        );
-        return temp.push([market1, unitCost + preciousMetalDiscrepancy]);
-      }
-
-      if (title === "Market_Value_2") {
-        if (!market2) return temp.push(["", ""]);
-        const preciousMetalDiscrepancy = getPreciousMetalDiscrepancy(
-          commodityType,
-          quoteBasis,
-          increment,
-          market2
-        );
-        return temp.push([market2, unitCost + preciousMetalDiscrepancy]);
-      }
-
-      if (title === "Market_Value_3") {
-        if (!market3) return temp.push(["", ""]);
-        const preciousMetalDiscrepancy = getPreciousMetalDiscrepancy(
-          commodityType,
-          quoteBasis,
-          increment,
-          market3
-        );
-        return temp.push([market3, unitCost + preciousMetalDiscrepancy]);
-      }
-
-      if (
-        title === "Unit_Cost_1" ||
-        title === "Unit_Cost_2" ||
-        title === "Unit_Cost_3"
-      ) {
-        return;
+      switch (title) {
+        case "Silver_Weight_Grams":
+          if (commodityType === "Gold") value = "";
+          break;
+        case "Gold_Weight_Grams":
+          if (commodityType === "Silver") value = "";
+          break;
+        case "Increment":
+          if (
+            commodityType === "Gold" &&
+            !isNaN(style.JewelryDetails["Increment_Per_Dollar"]?.value) &&
+            !isNaN(style.JewelryDetails["Gold_Weight_Grams"]?.value)
+          ) {
+            increment =
+              style.JewelryDetails["Increment_Per_Dollar"].value *
+              style.JewelryDetails["Gold_Weight_Grams"].value;
+          }
+          if (
+            commodityType === "Silver" &&
+            !isNaN(style.JewelryDetails["Silver_Weight_Grams"]?.value)
+          ) {
+            increment =
+              style.JewelryDetails["Silver_Weight_Grams"].value * (1 / 31.1);
+          }
+          break;
+        case "Quote_Basis":
+          if (commodityType === "Gold" || commodityType === "Silver")
+            quoteBasis = value || 0;
+          break;
+        case "Unit_Cost":
+          unitCost = value || 0;
+          break;
+        case "Market_Value_1":
+          if (market1) {
+            const preciousMetalDiscrepancy = getPreciousMetalDiscrepancy(
+              commodityType,
+              quoteBasis,
+              increment,
+              market1
+            );
+            valueSet = [market1, unitCost + preciousMetalDiscrepancy];
+          }
+          return temp.push(...valueSet);
+        case "Market_Value_2":
+          if (market2) {
+            const preciousMetalDiscrepancy = getPreciousMetalDiscrepancy(
+              commodityType,
+              quoteBasis,
+              increment,
+              market2
+            );
+            valueSet = [market2, unitCost + preciousMetalDiscrepancy];
+          }
+          return temp.push(...valueSet);
+        case "Market_Value_3":
+          if (market3) {
+            const preciousMetalDiscrepancy = getPreciousMetalDiscrepancy(
+              commodityType,
+              quoteBasis,
+              increment,
+              market3
+            );
+            valueSet = [market3, unitCost + preciousMetalDiscrepancy];
+          }
+          return temp.push(...valueSet);
+        case "Unit_Cost_1" || "Unit_Cost_2" || "Unit_Cost_3":
+          return;
       }
 
       return temp.push(value);
