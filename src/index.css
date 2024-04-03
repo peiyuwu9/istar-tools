@@ -6,6 +6,10 @@ body {
   background-color: rgb(241, 245, 249, 0.5);
 }
 
+#root {
+  height: 100vh;
+}
+
 @layer components {
   /* Homw Button CSS */
   .button-home {

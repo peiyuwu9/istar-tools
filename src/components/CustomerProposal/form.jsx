@@ -45,11 +45,14 @@ const formSchema = z.object({
   market3: z.coerce.number().optional(),
 });
 
-export function CustomerProposalForm() {
+export function CustomerProposalForm({ refetch }) {
   const { customers } = useOutletContext();
   const [open, setOpen] = useState(false);
-  const { mutate, status, isLoading } = useMutation((data) =>
-    createCustomerProposal(data)
+  const { mutate, status, isLoading } = useMutation(
+    (data) => createCustomerProposal(data),
+    {
+      onSuccess: refetch,
+    }
   );
 
   // define form

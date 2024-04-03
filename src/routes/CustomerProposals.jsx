@@ -21,7 +21,7 @@ import ErrorPage from "../components/ErrorPage";
 export default function CustomerProposals() {
   const [year, setYear] = useState(new Date().getFullYear());
   const [columnFilters, setColumnFilters] = useState([]);
-  const { isLoading, data, error } = useQuery(
+  const { isLoading, data, error, refetch } = useQuery(
     ["customerProposals", year],
     () => getCustomerProposals(year),
     {
@@ -88,7 +88,7 @@ export default function CustomerProposals() {
   return (
     <div className="h-full flex flex-col justify-between">
       <DataTableHearder table={table} year={year} setYear={setYear}>
-        <CustomerProposalForm />
+        <CustomerProposalForm refetch={refetch} />
       </DataTableHearder>
       {error ? (
         <ErrorPage message={error?.message} />
