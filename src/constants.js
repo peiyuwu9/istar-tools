@@ -28,6 +28,13 @@ export const routeConstants = {
       get: "customers",
     },
   },
+  settings: {
+    name: "Settings",
+    title: "Settings",
+    method: {
+      get: "settings",
+    },
+  },
 };
 
 export const dataSchemaSpec = {

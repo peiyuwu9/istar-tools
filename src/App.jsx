@@ -1,10 +1,11 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { createCustomerProposal, getCustomers } from "@/lib/actions.js";
+import { getCustomers } from "@/lib/actions.js";
 import { routeConstants } from "@/constants";
 
 import Home from "@/routes/Home.jsx";
 import CustomerProposals from "@/routes/CustomerProposals.jsx";
+import Settings from "@/routes/Settings.jsx";
 
 import Layout from "@/components/Layout.jsx";
 import ErrorPage from "@/components/ErrorPage";
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
         path: routeConstants["customer-proposals"].method.get,
         element: <CustomerProposals />,
         errorElement: <ErrorPage message={"Something Went Wrong!"} />,
+      },
+      {
+        path: routeConstants["settings"].method.get,
+        element: <Settings />,
       },
     ],
     errorElement: <ErrorPage message={"Something Went Wrong!"} />,

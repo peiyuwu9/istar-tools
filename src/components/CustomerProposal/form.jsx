@@ -140,6 +140,7 @@ export function CustomerProposalForm({ refetch }) {
                         <FormLabel className="mr-4">Customer</FormLabel>
                         <FormControl>
                           <Combobox
+                            defaultValue="Select Customer"
                             selections={customers}
                             value={field.value}
                             onChange={field.onChange}
@@ -157,7 +158,7 @@ export function CustomerProposalForm({ refetch }) {
                         <FormLabel>Style Numbers</FormLabel>
                         <FormControl>
                           <Textarea
-                            placeholder="Enter newline for each style..."
+                            placeholder="Enter newline or separate by comma for each style..."
                             className="h-[200px]"
                             {...field}
                           />

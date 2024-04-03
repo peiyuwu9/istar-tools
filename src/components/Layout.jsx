@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { NavLink, Outlet, useLoaderData, useLocation } from "react-router-dom";
 import useResizeObserver from "@react-hook/resize-observer";
-import { BarChart3, Home } from "lucide-react";
+import { BarChart3, Home, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { routeConstants } from "@/constants";
 
@@ -30,22 +30,36 @@ export default function Root() {
         <h2 className="text-3xl my-4 italic font-serif tracking-widest text-center">
           iStar
         </h2>
-        <nav className="flex flex-col gap-6 my-16 p-2 w-fit mx-auto">
-          {Object.keys(navLinks).map((navLink) => {
-            const { name, method } = routeConstants[navLink];
-            return (
-              <NavLink
-                to={method.get}
-                className={(status) =>
-                  cn(status.isActive ? "active" : "", "flex items-center gap-1")
-                }
-                key={name}
-              >
-                {navLinks[navLink].icon}
-                {name}
-              </NavLink>
-            );
-          })}
+        <nav className="flex flex-col justify-between my-16 p-2 w-fit h-[calc(100%-160px)] mx-auto">
+          <div className="flex flex-col gap-6">
+            {Object.keys(navLinks).map((navLink) => {
+              const { name, method } = routeConstants[navLink];
+              return (
+                <NavLink
+                  to={method.get}
+                  className={(status) =>
+                    cn(
+                      status.isActive ? "active" : "",
+                      "flex items-center gap-1"
+                    )
+                  }
+                  key={name}
+                >
+                  {navLinks[navLink].icon}
+                  {name}
+                </NavLink>
+              );
+            })}
+          </div>
+          <NavLink
+            to={routeConstants["settings"].method.get}
+            className={(status) =>
+              cn(status.isActive ? "active" : "", "flex items-center gap-1")
+            }
+          >
+            <Settings />
+            {routeConstants["settings"].name}
+          </NavLink>
         </nav>
       </div>
       <div id="content" className="flex-1 min-w-[900px] p-3">

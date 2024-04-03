@@ -38,7 +38,7 @@ export function DataTableHearder({ children, table, year, setYear }) {
         </Select>
         <div className="relative">
           <Input
-            placeholder={`Search Program`}
+            placeholder={"Search Program"}
             value={table.getColumn("program")?.getFilterValue() ?? ""}
             onChange={(event) =>
               table.getColumn("program")?.setFilterValue(event.target.value)
@@ -52,6 +52,7 @@ export function DataTableHearder({ children, table, year, setYear }) {
           />
         </div>
         <Combobox
+          defaultValue="Select Customer"
           selections={customers}
           value={table.getColumn("customer")?.getFilterValue() ?? ""}
           onChange={(value) =>
