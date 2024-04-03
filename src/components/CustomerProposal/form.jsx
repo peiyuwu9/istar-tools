@@ -48,7 +48,7 @@ const formSchema = z.object({
 export function CustomerProposalForm() {
   const { customers } = useOutletContext();
   const [open, setOpen] = useState(false);
-  const { mutate, isLoading, isError, isSuccess } = useMutation((data) =>
+  const { mutate, status, isLoading } = useMutation((data) =>
     createCustomerProposal(data)
   );
 
@@ -220,10 +220,14 @@ export function CustomerProposalForm() {
       {isLoading && (
         <Submit>We are generating your customer proposal...</Submit>
       )}
-      {/* {isError && <Toaster status={"error"} message={"CP Creation Failed!"} />}
-      {isSuccess && (
-        <Toaster status={"success"} message={"CP Creation Successed!"} />
-      )} */}
+      <Toaster
+        status={status}
+        message={
+          status === "success"
+            ? "CP Creation Successed!"
+            : "CP Creation Failed!"
+        }
+      />
     </>
   );
 }

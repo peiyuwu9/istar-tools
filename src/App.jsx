@@ -27,10 +27,10 @@ const router = createBrowserRouter([
       {
         path: routeConstants["customer-proposals"].method.get,
         element: <CustomerProposals />,
-        errorElement: <ErrorPage />,
+        errorElement: <ErrorPage message={"Something Went Wrong!"} />,
       },
     ],
-    errorElement: <ErrorPage />,
+    errorElement: <ErrorPage message={"Something Went Wrong!"} />,
   },
 ]);
 

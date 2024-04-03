@@ -10,8 +10,7 @@ export default function ErrorPage({ message }) {
   return (
     <div className="w-full h-full flex flex-col justify-center items-center gap-2">
       <Beer size={45} color="#ffe54c" />
-      <h4 className="text-xl">Oops! Something Went Wrong!</h4>
-      <h4 className="text-xl">{message}</h4>
+      <h4 className="text-xl">Oops! {message}</h4>
     </div>
   );
 }

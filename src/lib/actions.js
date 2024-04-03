@@ -6,8 +6,9 @@ export async function getCustomerProposals(year) {
   const res = await fetch(
     `${apiUrl}/${routeConstants["customer-proposals"].method.get}?year=${year}`
   );
-  if (!res.ok) throw new Error("Oops! Something Went Wrong!");
-  return await res.json();
+  const resJson = await res.json();
+  if (!res.ok) throw new Error(resJson.message);
+  return resJson;
 }
 
 export async function createCustomerProposal(data) {
@@ -21,14 +22,16 @@ export async function createCustomerProposal(data) {
       body: JSON.stringify(data),
     }
   );
-  if (!res.ok) throw new Error("Oops! Something Went Wrong!");
-  return await res.json();
+  const resJson = await res.json();
+  if (!res.ok) throw new Error(resJson.message);
+  return resJson;
 }
 
 export async function getCustomers() {
   const res = await fetch(
     `${apiUrl}/${routeConstants["customers"].method.get}?orderBy=name`
   );
-  if (!res.ok) throw new Error("Oops! Something Went Wrong!");
-  return await res.json();
+  const resJson = await res.json();
+  if (!res.ok) throw new Error(resJson.message);
+  return resJson;
 }

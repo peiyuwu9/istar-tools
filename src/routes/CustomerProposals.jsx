@@ -21,7 +21,7 @@ import ErrorPage from "../components/ErrorPage";
 export default function CustomerProposals() {
   const [year, setYear] = useState(new Date().getFullYear());
   const [columnFilters, setColumnFilters] = useState([]);
-  const { isLoading, data } = useQuery(
+  const { isLoading, data, error } = useQuery(
     ["customerProposals", year],
     () => getCustomerProposals(year),
     {
@@ -90,8 +90,8 @@ export default function CustomerProposals() {
       <DataTableHearder table={table} year={year} setYear={setYear}>
         <CustomerProposalForm />
       </DataTableHearder>
-      {data?.message ? (
-        <ErrorPage message={data.message} />
+      {error ? (
+        <ErrorPage message={error?.message} />
       ) : isLoading ? (
         <Loading />
       ) : (
