@@ -74,7 +74,10 @@ export default async function (req, res) {
   );
   const userInputStyles = styles.split(",");
   const notExistingInventoryIds = userInputStyles.reduce((array, style) => {
-    if (!existingInventoryIds.includes(style)) array.push(style);
+    if (style) {
+      const formattedStyle = style.replaceAll(" ", "");
+      if (!existingInventoryIds.includes(formattedStyle)) array.push(style);
+    }
     return array;
   }, []);
   const message =

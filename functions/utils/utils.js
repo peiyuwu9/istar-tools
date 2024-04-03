@@ -54,11 +54,12 @@ export async function loginAcumatica() {
 }
 
 export function formatStylesQuery(styles) {
-  const list = styles.split(",");
+  const list = styles.replaceAll(" ", "").split(",");
   let query = "";
 
   // example: "InventoruID eq BBY100013011 or InventoruID eq SSS100049011 or InventoruID eq FKY100101021"
   for (let i = 0; i < list.length; i++) {
+    if (!list[i]) continue;
     query += "InventoryID eq '" + list[i] + "'";
     if (i !== list.length - 1) query += " or ";
   }

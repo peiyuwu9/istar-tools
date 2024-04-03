@@ -72,12 +72,6 @@ export function CustomerProposalForm({ refetch }) {
     },
   });
 
-  function handleClose() {
-    form.reset();
-    setMessage("");
-    return setOpen(false);
-  }
-
   function handleSubmit(data) {
     const mutateData = {
       program: data.program,
@@ -91,6 +85,21 @@ export function CustomerProposalForm({ refetch }) {
     };
     mutate(mutateData);
     return form.reset();
+  }
+
+  function handleFormSubmit(e) {
+    if (message) setMessage("");
+    return form.handleSubmit(handleSubmit)(e);
+  }
+
+  function handleChange() {
+    if (message) setMessage("");
+  }
+
+  function handleClose() {
+    if (message) setMessage("");
+    form.reset();
+    return setOpen(false);
   }
 
   return (
@@ -111,7 +120,8 @@ export function CustomerProposalForm({ refetch }) {
           <Form {...form}>
             <form
               id="customer-proposal-form"
-              onSubmit={form.handleSubmit(handleSubmit)}
+              onSubmit={handleFormSubmit}
+              onChange={handleChange}
               className="space-y-4"
             >
               <FormField

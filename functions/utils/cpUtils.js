@@ -111,7 +111,9 @@ export function formatDataForExcel(data, markets) {
             valueSet = [market3, unitCost + preciousMetalDiscrepancy];
           }
           return temp.push(...valueSet);
-        case "Unit_Cost_1" || "Unit_Cost_2" || "Unit_Cost_3":
+        case "Unit_Cost_1":
+        case "Unit_Cost_2":
+        case "Unit_Cost_3":
           return;
       }
 
