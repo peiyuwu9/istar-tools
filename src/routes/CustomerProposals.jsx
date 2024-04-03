@@ -61,11 +61,13 @@ export default function CustomerProposals() {
       id: "actions",
       cell: ({ row }) => {
         const url = row.original.url;
+        const id = row.original.id;
         return (
           <div className="flex justify-evenly">
             <a href={url} download>
               <Download className="hover:text-green-500" />
             </a>
+            <span data-id={id} onClick={handleDelete}></span>
           </div>
         );
       },
@@ -84,6 +86,11 @@ export default function CustomerProposals() {
       columnFilters,
     },
   });
+
+  function handleDelete(e) {
+    const element = e.target.closest("[data-id]");
+    console.log(element.dataset.id);
+  }
 
   return (
     <div className="h-full flex flex-col justify-between">

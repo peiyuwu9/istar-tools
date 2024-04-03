@@ -11,7 +11,11 @@ import {
 export async function getList(collec, querys = []) {
   const db = getFirestore();
   const res = await getDocs(query(collection(db, collec), ...querys));
-  return res.docs.map((doc) => doc.data());
+  const data = res.docs.map((doc) => {
+    let temp = doc.data();
+    return { id: doc.id, ...temp };
+  });
+  return data;
 }
 
 export async function addNewDoc(collec, data) {
