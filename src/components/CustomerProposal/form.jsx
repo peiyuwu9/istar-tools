@@ -48,10 +48,14 @@ const formSchema = z.object({
 export function CustomerProposalForm({ refetch }) {
   const { customers } = useOutletContext();
   const [open, setOpen] = useState(false);
-  const { mutate, status, isLoading } = useMutation(
+  const [message, setMessage] = useState("");
+  const { isLoading, mutate, status } = useMutation(
     (data) => createCustomerProposal(data),
     {
-      onSuccess: refetch,
+      onSuccess: (data) => {
+        if (data.message !== "No Inventory ID Found!") refetch(); // refetch data for customer proposal table
+        setMessage(data.message);
+      },
     }
   );
 
@@ -70,6 +74,7 @@ export function CustomerProposalForm({ refetch }) {
 
   function handleClose() {
     form.reset();
+    setMessage("");
     return setOpen(false);
   }
 
@@ -207,6 +212,15 @@ export function CustomerProposalForm({ refetch }) {
             </form>
           </Form>
           <DialogFooter className="gap-2 sm:gap-0">
+            {message && (
+              <div className="flex-1">
+                {message.split("\n").map((message) => (
+                  <p className=" text-red-500" key={message}>
+                    {message}
+                  </p>
+                ))}
+              </div>
+            )}
             <Button variant="destructive" onClick={handleClose}>
               Cancel
             </Button>
@@ -226,9 +240,7 @@ export function CustomerProposalForm({ refetch }) {
       <Toaster
         status={status}
         message={
-          status === "success"
-            ? "CP Creation Successed!"
-            : "CP Creation Failed!"
+          status === "success" ? "Submission Successed!" : "Submission Failed!"
         }
       />
     </>

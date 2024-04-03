@@ -38,6 +38,9 @@ export default async function (req, res) {
     return res.status(500).send({ message: "Internal Server Error!" });
   }
 
+  if (data.length === 0)
+    return res.status(200).send({ message: "No Inventory ID Found!" });
+
   try {
     // prepare date for excel
     const excelData = formatDataForExcel(data, markets);
@@ -65,5 +68,21 @@ export default async function (req, res) {
     return res.status(500).send({ message: "Internal Server Error!" });
   }
 
-  return res.status(200).send({ message: "CP Creation Successful!" });
+  // check inventory ids that are not in databaase
+  const existingInventoryIds = data.map(
+    (style) => style?.InventoryID?.value || ""
+  );
+  const userInputStyles = styles.split(",");
+  const notExistingInventoryIds = userInputStyles.reduce((array, style) => {
+    if (!existingInventoryIds.includes(style)) array.push(style);
+    return array;
+  }, []);
+  const message =
+    notExistingInventoryIds.length === 0
+      ? ""
+      : notExistingInventoryIds.length === 1
+      ? `Below style is not found:\n${notExistingInventoryIds[0]}`
+      : `Below styles are not found:\n${notExistingInventoryIds.join("\n")}`;
+
+  return res.status(200).send({ message });
 }

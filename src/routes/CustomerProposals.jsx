@@ -21,7 +21,7 @@ import ErrorPage from "../components/ErrorPage";
 export default function CustomerProposals() {
   const [year, setYear] = useState(new Date().getFullYear());
   const [columnFilters, setColumnFilters] = useState([]);
-  const { isLoading, data, error, refetch } = useQuery(
+  const { data, error, isLoading, refetch } = useQuery(
     ["customerProposals", year],
     () => getCustomerProposals(year),
     {
