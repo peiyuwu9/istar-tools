@@ -18,10 +18,12 @@ import { CustomerProposalForm } from "@/components/CustomerProposal/form";
 import { Badge } from "@/components/ui/badge";
 import { Loading } from "@/components/ui/loading-dialog";
 import ErrorPage from "@/components/ErrorPage";
-import { Toaster } from "@/components/ui/toaster";
+import DeleteDialog from "@/components/DeleteDialog";
 
 export default function CustomerProposals() {
   const [year, setYear] = useState(new Date().getFullYear());
+  const [open, setOpen] = useState(false);
+  const [target, setTarget] = useState(null);
   const [columnFilters, setColumnFilters] = useState([]);
   const { data, error, isLoading, refetch } = useQuery(
     ["customerProposals", year],
@@ -76,7 +78,7 @@ export default function CustomerProposals() {
             <a href={url} download>
               <Download className="hover:text-green-500" />
             </a>
-            <span data-id={id} data-filename={filename} onClick={handleDelete}>
+            <span data-id={id} data-filename={filename} onClick={handleClick}>
               <Trash2 className="hover:text-red-500" />
             </span>
           </div>
@@ -98,9 +100,14 @@ export default function CustomerProposals() {
     },
   });
 
-  function handleDelete(e) {
-    const element = e.target.closest("[data-id]");
-    return mutate(element.dataset);
+  function handleClick(e) {
+    setOpen(true);
+    return setTarget(e.target.closest("[data-id]"));
+  }
+
+  // no need to use aync function since useMutation handle it already
+  function handleDelete(data) {
+    return deleteCustomerProposal(data.id, data.filename);
   }
 
   return (
@@ -122,9 +129,13 @@ export default function CustomerProposals() {
           </>
         )}
       </div>
-      <Toaster
-        status={status}
-        message={status === "success" ? "CP Deleted!" : "CP Delete Failed!"}
+      <DeleteDialog
+        open={open}
+        setOpen={setOpen}
+        content={target?.dataset?.filename}
+        action={handleDelete}
+        data={target?.dataset}
+        refetch={refetch}
       />
     </>
   );
