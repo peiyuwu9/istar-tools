@@ -1,7 +1,9 @@
 import { useState } from "react";
-import { Download } from "lucide-react";
+import { Download, Trash2 } from "lucide-react";
+import { useMutation, useQuery } from "react-query";
 import { formatDate } from "@/lib/utils";
 import { getCustomerProposals } from "@/lib/actions";
+import { deleteCustomerProposal } from "@/lib/actions";
 import {
   getCoreRowModel,
   getFilteredRowModel,
@@ -15,8 +17,8 @@ import { DataTableHearder } from "@/components/CustomerProposal/data-table-heade
 import { CustomerProposalForm } from "@/components/CustomerProposal/form";
 import { Badge } from "@/components/ui/badge";
 import { Loading } from "@/components/ui/loading-dialog";
-import { useQuery } from "react-query";
-import ErrorPage from "../components/ErrorPage";
+import ErrorPage from "@/components/ErrorPage";
+import { Toaster } from "@/components/ui/toaster";
 
 export default function CustomerProposals() {
   const [year, setYear] = useState(new Date().getFullYear());
@@ -26,6 +28,12 @@ export default function CustomerProposals() {
     () => getCustomerProposals(year),
     {
       refetchOnWindowFocus: false,
+    }
+  );
+  const { mutate, status } = useMutation(
+    (dataset) => deleteCustomerProposal(dataset.id, dataset.filename),
+    {
+      onSuccess: refetch, // refetch data for customer proposal table
     }
   );
 
@@ -62,12 +70,15 @@ export default function CustomerProposals() {
       cell: ({ row }) => {
         const url = row.original.url;
         const id = row.original.id;
+        const filename = row.original.filename;
         return (
           <div className="flex justify-evenly">
             <a href={url} download>
               <Download className="hover:text-green-500" />
             </a>
-            <span data-id={id} onClick={handleDelete}></span>
+            <span data-id={id} data-filename={filename} onClick={handleDelete}>
+              <Trash2 className="hover:text-red-500" />
+            </span>
           </div>
         );
       },
@@ -89,26 +100,32 @@ export default function CustomerProposals() {
 
   function handleDelete(e) {
     const element = e.target.closest("[data-id]");
-    console.log(element.dataset.id);
+    return mutate(element.dataset);
   }
 
   return (
-    <div className="h-full flex flex-col justify-between">
-      <DataTableHearder table={table} year={year} setYear={setYear}>
-        <CustomerProposalForm refetch={refetch} />
-      </DataTableHearder>
-      {error ? (
-        <ErrorPage message={error?.message} />
-      ) : isLoading ? (
-        <Loading />
-      ) : (
-        <>
-          <div className="flex-1">
-            <DataTable columns={columns} table={table} />
-          </div>
-          <DataTablePagination table={table} />
-        </>
-      )}
-    </div>
+    <>
+      <div className="h-full flex flex-col justify-between">
+        <DataTableHearder table={table} year={year} setYear={setYear}>
+          <CustomerProposalForm refetch={refetch} />
+        </DataTableHearder>
+        {error ? (
+          <ErrorPage message={error?.message} />
+        ) : isLoading ? (
+          <Loading />
+        ) : (
+          <>
+            <div className="flex-1">
+              <DataTable columns={columns} table={table} />
+            </div>
+            <DataTablePagination table={table} />
+          </>
+        )}
+      </div>
+      <Toaster
+        status={status}
+        message={status === "success" ? "CP Deleted!" : "CP Delete Failed!"}
+      />
+    </>
   );
 }

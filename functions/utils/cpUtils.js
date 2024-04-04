@@ -224,25 +224,25 @@ export async function createExcel(data, imageBurffers) {
   return await workbook.xlsx.writeBuffer();
 }
 
-export function generateFileName(customer, program) {
-  let fileName = "";
-  if (customer) fileName += customer.toUpperCase();
+export function generateFilename(customer, program) {
+  let filename = "";
+  if (customer) filename += customer.toUpperCase();
   if (program) {
     if (customer) {
-      fileName += "_" + program.toUpperCase();
+      filename += "_" + program.toUpperCase();
     } else {
-      fileName += program.toUpperCase();
+      filename += program.toUpperCase();
     }
   }
   if (!customer && !program) {
-    fileName += "CP";
+    filename += "CP";
   } else {
-    fileName += "_CP";
+    filename += "_CP";
   }
   const timestamnp = generateTimeStamp();
-  fileName += "_" + timestamnp;
-  fileName += ".xlsx";
+  filename += "_" + timestamnp;
+  filename += ".xlsx";
 
   // exmpale: TARGET_TEST_CP_20240309131532.xlsx
-  return fileName;
+  return filename;
 }

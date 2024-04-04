@@ -35,3 +35,17 @@ export async function getCustomers() {
   if (!res.ok) throw new Error(resJson.message);
   return resJson;
 }
+
+export async function deleteCustomerProposal(id, filename) {
+  const url = encodeURI(
+    `${apiUrl}/${routeConstants["customer-proposal"].method.delete
+      .replace("{{id}}", id)
+      .replace("{{filename}}", filename)}`
+  );
+  const res = await fetch(url, {
+    method: "DELETE",
+  });
+  const resJson = await res.json();
+  if (!res.ok) throw new Error(resJson.message);
+  return resJson;
+}

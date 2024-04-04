@@ -3,6 +3,7 @@ import {
   collection,
   getDocs,
   setDoc,
+  deleteDoc,
   doc,
   serverTimestamp,
   query,
@@ -23,4 +24,10 @@ export async function addNewDoc(collec, data) {
   const ref = doc(collection(db, collec));
   data = { ...data, created_at: serverTimestamp() };
   return await setDoc(ref, data);
+}
+
+export async function deleteExistingDoc(collec, id) {
+  const db = getFirestore();
+  const ref = doc(collection(db, collec), id);
+  return await deleteDoc(ref);
 }

@@ -7,7 +7,7 @@ import {
   createExcel,
   formatDataForExcel,
   formatImagesPath,
-  generateFileName,
+  generateFilename,
   getImage,
   getStockItemData,
 } from "../utils/cpUtils.js";
@@ -53,13 +53,14 @@ export default async function (req, res) {
 
     // upload excel file
     const excelBuffer = await createExcel(excelData, imageBuffers);
-    const cpFileName = generateFileName(customer, program);
-    const downloadUrl = await uploadExcel(excelBuffer, cpFileName);
+    const filename = generateFilename(customer, program);
+    const downloadUrl = await uploadExcel(excelBuffer, filename);
 
     // add cp data to database
     const doc = {
       program,
       customer,
+      filename,
       url: downloadUrl,
     };
     await addNewDoc("customer_proposals", doc);

@@ -19,6 +19,7 @@ export const routeConstants = {
     method: {
       get: "customer-proposal/:id",
       post: "customer-proposal",
+      delete: "customer-proposal?id={{id}}&filename={{filename}}",
     },
   },
   customers: {
