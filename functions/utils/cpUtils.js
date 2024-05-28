@@ -158,13 +158,19 @@ export function formatImagesPath(data) {
 export async function getImage(Cookie, path) {
   if (!path) return "";
 
+  console.log("path: ", path);
+
   const res = await fetch(`${process.env.ACUMATICA_URL}/${path}`, {
     headers: {
       Cookie,
     },
   });
 
-  if (!res.ok || res.status !== 200) throw "Error occurs when retrieving image";
+  if (!res.ok || res.status !== 200) {
+    console.log("status: ", res.status);
+    console.log("Error occurs when retrieving image, path: ", path);
+    return "";
+  }
 
   const imageBlob = await res.blob();
   const imageArrayBuffer = await imageBlob.arrayBuffer();

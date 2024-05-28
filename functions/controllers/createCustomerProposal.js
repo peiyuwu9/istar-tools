@@ -1,3 +1,5 @@
+import Bottleneck from "bottleneck";
+
 import {
   formatStylesQuery,
   isAcumaticaExpired,
@@ -47,9 +49,19 @@ export default async function (req, res) {
 
     // retrieve stock item images
     const imageURLs = formatImagesPath(data);
-    const imageBuffers = await Promise.all(
-      imageURLs.map((url) => getImage(global.AcumaticaSession.Cookie, url))
-    );
+    // Bottleneck is a task scheduler and rate limiter for Node.js
+    const limiter = new Bottleneck({
+      maxConcurrent: 10, // how many jobs can be executing at the same time
+      minTime: 100, // how long to wait after launching a job before launching another one
+    });
+    const allImageTasks = imageURLs.map((url) => {
+      // schedule returns a promise that resolves when the operation is complete
+      return limiter.schedule(() => {
+        // this method is called when the scheduler is ready for it
+        return getImage(global.AcumaticaSession.Cookie, url);
+      });
+    });
+    const imageBuffers = await Promise.all(allImageTasks);
 
     // upload excel file
     const excelBuffer = await createExcel(excelData, imageBuffers);
